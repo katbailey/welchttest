@@ -26,7 +26,7 @@ var pow func(float64, float64) float64 = math.Pow
 //  * * *                 ***********
 // -----------------|-----|-----------------
 //                  0    t-score
-func studentsT_CDF(t_score float64, dgf float64, upper_tail bool) float64 {
+func StudentsT_CDF(t_score float64, dgf float64, upper_tail bool) float64 {
 	if dgf < 1 {
 		return float64(0)
 	}
@@ -46,7 +46,7 @@ func studentsT_CDF(t_score float64, dgf float64, upper_tail bool) float64 {
 
 // Returns the number of degress of freedom when comparing two sets of data with
 // different variances.
-func getDegreesOfFreedom(nx int, ny int, varx float64, vary float64) float64 {
+func GetDegreesOfFreedom(nx int, ny int, varx float64, vary float64) float64 {
 	if nx < 2 || ny < 2 {
 		return float64(0)
 	}
@@ -59,7 +59,7 @@ func getDegreesOfFreedom(nx int, ny int, varx float64, vary float64) float64 {
 
 // Returns a test statistic for the difference in means between two sets of data
 // with different variances.
-func calculateTScore(nx int, ny int, meanx float64, meany float64, varx float64, vary float64) float64 {
+func CalculateTScore(nx int, ny int, meanx float64, meany float64, varx float64, vary float64) float64 {
 	var tscore float64
 	if nx < 1 || ny < 1 {
 		return tscore
@@ -74,17 +74,17 @@ func calculateTScore(nx int, ny int, meanx float64, meany float64, varx float64,
 
 // Returns a value between 0 and 1 representing the degree of confidence that
 // the true mean of x is greater than the true mean of y.
-func getConfidence(nx int, ny int, meanx float64, meany float64, varx float64, vary float64) float64 {
+func GetConfidence(nx int, ny int, meanx float64, meany float64, varx float64, vary float64) float64 {
 	var confidence float64
 	if nx < 1 || ny < 1 || meanx < meany {
 		return confidence
 	}
-	dgfree := getDegreesOfFreedom(nx, ny, varx, vary)
+	dgfree := GetDegreesOfFreedom(nx, ny, varx, vary)
 	if dgfree == 0 {
 		return confidence
 	}
 	var t_score float64
-	t_score = calculateTScore(nx, ny, meanx, meany, varx, vary)
+	t_score = CalculateTScore(nx, ny, meanx, meany, varx, vary)
 	// If the t-score is negative or 0, then we have no confidence.
 	if t_score <= 0 {
 		return confidence
@@ -95,7 +95,7 @@ func getConfidence(nx int, ny int, meanx float64, meany float64, varx float64, v
 	// greater than our t-score, depending whether we set the "upper_tail" param
 	// to true or false. Since we know our t-score is positive, we want the upper
 	// tail.
-	pvalue := studentsT_CDF(t_score, dgfree, true)
+	pvalue := StudentsT_CDF(t_score, dgfree, true)
 	// No point in expressing negative confidence values so don't include it if our
 	// p-value is greater than or equal to 0.5.
 	if pvalue > 0.5 {
